@@ -1,5 +1,7 @@
 # Wekeza Capstone Project
 
+Quantitative Investment Platform
+
 This repository contains the landing page for the Wekeza Capstone Project, a platform offering portfolio management and investment options using quantitative analysis and AI agents.
 
 ## Repository Information
