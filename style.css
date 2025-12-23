@@ -215,3 +215,44 @@ footer {
     color: var(--text-muted);
     margin-top: 4rem;
 }
+/* Auth Pages */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-card {
+    background-color: var(--background-card);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+/* Container for the whole logo area */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;              /* Space between the 'W' box and the text */
+    font-size: 24px;        /* Size of the text "Wekeza" */
+    font-weight: 700;       /* Bold text */
+    color: white;
+    font-family: 'Inter', sans-serif; /* Ensure you have a nice font loaded */
+    user-select: none;      /* Prevents highlighting the logo text */
+}
+
+/* The blue square box */
+.brand-icon {
+    width: 32px;
+    height: 32px;
+    background: #3b82f6;    /* The primary blue color */
+    border-radius: 8px;     /* Rounded corners */
+    display: flex;
+    align-items: center;    /* Centers the 'W' vertically */
+    justify-content: center;/* Centers the 'W' horizontally */
+    font-size: 18px;        /* Size of the 'W' inside the box */
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5); /* Subtle blue glow */
+}

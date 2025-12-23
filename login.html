@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wekeza - Professional Login</title>
+    <style>
+        /* 1. RESET & BASIC SETUP */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            /* Deep dark blue background with a radial gradient for depth */
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Optional: Subtle background lines effect (simulated) */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+
+        /* 2. THE CARD CONTAINER */
+        .login-card {
+            background: rgba(30, 41, 59, 0.7); /* Semi-transparent dark blue */
+            backdrop-filter: blur(10px);        /* Glass blur effect */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Deep shadow */
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 3. LOGO & TEXT */
+        .logo-circle {
+            width: 48px;
+            height: 48px;
+            background: transparent;
+            border: 2px solid #3b82f6; /* Blue border */
+            border-radius: 50%;
+            color: #3b82f6;
+            font-weight: bold;
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px auto;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        p.subtitle {
+            color: #94a3b8; /* Muted grey-blue */
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* 4. FORM ELEMENTS */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+            display: none; /* Hidden visually, kept for structure if needed */
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder {
+            color: #64748b;
+        }
+
+        /* Glow effect on input focus */
+        input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        /* 5. BUTTON STYLING */
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px); /* Slight lift */
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4); /* Blue glow */
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 6. FOOTER LINKS */
+        .footer-link {
+            margin-top: 24px;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        .footer-link a {
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-link a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="logo-circle">W</div>
+        
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Sign in to your Wekeza dashboard</p>
+
+        <form id="loginform">
+            <div class="input-group">
+                <input type="email" placeholder="Email address" required>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" placeholder="Password" required>
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+        <div class="footer-link">
+            Don't have an account? <a href="#">Request Access</a>
+        </div>
+    </div>
+    <script src="auth.js"></script>
+
+
+</body>
+</html>
