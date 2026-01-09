@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,23 +30,29 @@
         body::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 50px 50px;
             pointer-events: none;
         }
 
         /* 2. THE CARD CONTAINER */
         .login-card {
-            background: rgba(30, 41, 59, 0.7); /* Semi-transparent dark blue */
-            backdrop-filter: blur(10px);        /* Glass blur effect */
+            background: rgba(30, 41, 59, 0.7);
+            /* Semi-transparent dark blue */
+            backdrop-filter: blur(10px);
+            /* Glass blur effect */
             border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 40px;
             border-radius: 16px;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Deep shadow */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            /* Deep shadow */
             text-align: center;
             position: relative;
             z-index: 10;
@@ -56,7 +63,8 @@
             width: 48px;
             height: 48px;
             background: transparent;
-            border: 2px solid #3b82f6; /* Blue border */
+            border: 2px solid #3b82f6;
+            /* Blue border */
             border-radius: 50%;
             color: #3b82f6;
             font-weight: bold;
@@ -75,7 +83,8 @@
         }
 
         p.subtitle {
-            color: #94a3b8; /* Muted grey-blue */
+            color: #94a3b8;
+            /* Muted grey-blue */
             font-size: 14px;
             margin-bottom: 30px;
         }
@@ -91,7 +100,8 @@
             font-size: 12px;
             color: #cbd5e1;
             margin-bottom: 6px;
-            display: none; /* Hidden visually, kept for structure if needed */
+            display: none;
+            /* Hidden visually, kept for structure if needed */
         }
 
         input {
@@ -133,8 +143,10 @@
         }
 
         .login-btn:hover {
-            transform: translateY(-2px); /* Slight lift */
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4); /* Blue glow */
+            transform: translateY(-2px);
+            /* Slight lift */
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
+            /* Blue glow */
         }
 
         .login-btn:active {
@@ -157,35 +169,36 @@
         .footer-link a:hover {
             text-decoration: underline;
         }
-
     </style>
 </head>
+
 <body>
 
     <div class="login-card">
         <div class="logo-circle">W</div>
-        
+
         <h2>Welcome Back</h2>
         <p class="subtitle">Sign in to your Wekeza dashboard</p>
 
-        <form id="loginform">
+        <form id="loginForm">
             <div class="input-group">
-                <input type="email" placeholder="Email address" required>
+                <input type="email" id="loginEmail" placeholder="Email address" required>
             </div>
-            
+
             <div class="input-group">
-                <input type="password" placeholder="Password" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
             </div>
 
             <button type="submit" class="login-btn">Login</button>
         </form>
 
         <div class="footer-link">
-            Don't have an account? <a href="#">Request Access</a>
+            Don't have an account? <a href="signup.html">Create Account</a>
         </div>
     </div>
-    <script src="auth.js"></script>
+    <script src="js/auth.js"></script>
 
 
 </body>
+
 </html>

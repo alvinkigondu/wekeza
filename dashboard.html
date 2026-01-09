@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +8,22 @@
     <style>
         /* --- 1. VARIABLES & RESET --- */
         :root {
-            --bg-body: #0f172a;       /* Deep Slate */
-            --bg-panel: #1e293b;      /* Lighter Slate for cards */
-            --bg-sidebar: #020617;    /* Darkest for sidebar */
-            --text-main: #f8fafc;     /* White/Grey */
-            --text-muted: #94a3b8;    /* Muted Grey */
-            --accent-blue: #3b82f6;   /* Primary Action */
-            --accent-green: #10b981;  /* Positive Financials */
-            --accent-red: #ef4444;    /* Negative/Risk */
+            --bg-body: #0f172a;
+            /* Deep Slate */
+            --bg-panel: #1e293b;
+            /* Lighter Slate for cards */
+            --bg-sidebar: #020617;
+            /* Darkest for sidebar */
+            --text-main: #f8fafc;
+            /* White/Grey */
+            --text-muted: #94a3b8;
+            /* Muted Grey */
+            --accent-blue: #3b82f6;
+            /* Primary Action */
+            --accent-green: #10b981;
+            /* Positive Financials */
+            --accent-red: #ef4444;
+            /* Negative/Risk */
             --border-color: rgba(255, 255, 255, 0.08);
             --font-family: 'Inter', 'Segoe UI', sans-serif;
         }
@@ -55,7 +64,8 @@
         }
 
         .brand-icon {
-            width: 32px; height: 32px;
+            width: 32px;
+            height: 32px;
             background: var(--accent-blue);
             border-radius: 8px;
             display: flex;
@@ -84,7 +94,8 @@
             font-weight: 500;
         }
 
-        nav a:hover, nav a.active {
+        nav a:hover,
+        nav a.active {
             background-color: rgba(59, 130, 246, 0.1);
             color: var(--accent-blue);
         }
@@ -111,6 +122,7 @@
             font-size: 24px;
             font-weight: 600;
         }
+
         .header-title p {
             color: var(--text-muted);
             font-size: 14px;
@@ -123,7 +135,8 @@
         }
 
         .avatar {
-            width: 40px; height: 40px;
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, #475569, #334155);
             border-radius: 50%;
             border: 2px solid var(--bg-body);
@@ -173,14 +186,22 @@
             gap: 4px;
         }
 
-        .indicator-up { color: var(--accent-green); }
-        .indicator-down { color: var(--accent-red); }
-        .indicator-neutral { color: var(--text-muted); }
+        .indicator-up {
+            color: var(--accent-green);
+        }
+
+        .indicator-down {
+            color: var(--accent-red);
+        }
+
+        .indicator-neutral {
+            color: var(--text-muted);
+        }
 
         /* Special Styling for Portfolio Card (simulating a chart background) */
         .card.featured {
             background: linear-gradient(to bottom, var(--bg-panel), #1e293b),
-                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(59, 130, 246, 0.1)" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,250.7C960,235,1056,181,1152,165.3C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(59, 130, 246, 0.1)" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,250.7C960,235,1056,181,1152,165.3C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
             background-size: cover;
             background-position: bottom;
         }
@@ -230,11 +251,18 @@
             font-weight: 600;
         }
 
-        .status-active { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
-        .status-idle { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); }
+        .status-active {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+        }
 
+        .status-idle {
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--text-muted);
+        }
     </style>
 </head>
+
 <body>
 
     <aside class="sidebar">
@@ -254,7 +282,7 @@
         <nav style="margin-top: auto;">
             <ul>
                 <li><a href="#">Settings</a></li>
-                <li><a href="#">Logout</a></li>
+                <li><a href="#" id="logoutBtn" style="color: #ef4444;">Logout</a></li>
             </ul>
         </nav>
     </aside>
@@ -267,7 +295,7 @@
             </div>
             <div class="user-profile">
                 <div style="text-align: right; margin-right: 8px;">
-                    <div style="font-weight: 600; font-size: 14px;">Admin User</div>
+                    <div style="font-weight: 600; font-size: 14px;" id="userName">User</div>
                     <div style="color: var(--text-muted); font-size: 12px;">Verified</div>
                 </div>
                 <div class="avatar"></div>
@@ -286,7 +314,8 @@
 
             <div class="card">
                 <div class="card-label">Active AI Agents</div>
-                <div class="card-value">12 <span style="font-size: 14px; color: var(--text-muted); font-weight: 400;">/ 20</span></div>
+                <div class="card-value">12 <span style="font-size: 14px; color: var(--text-muted); font-weight: 400;">/
+                        20</span></div>
                 <div class="card-indicator indicator-up">
                     <span>• All Systems Operational</span>
                 </div>
@@ -312,7 +341,8 @@
         <div class="section-container">
             <div class="section-header">
                 <h3>Recent Agent Activity</h3>
-                <button style="background:none; border:none; color:var(--accent-blue); cursor:pointer;">View All</button>
+                <button style="background:none; border:none; color:var(--accent-blue); cursor:pointer;">View
+                    All</button>
             </div>
             <table>
                 <thead>
@@ -352,5 +382,34 @@
 
     </main>
 
+    <!-- Authentication Script -->
+    <script src="js/auth.js"></script>
+    <script>
+        // Protect this page - redirect to login if not authenticated
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!Auth.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Display user's name
+            const currentUser = Auth.getCurrentUser();
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.fullName;
+            }
+
+            // Handle logout
+            document.getElementById('logoutBtn').addEventListener('click', function (e) {
+                e.preventDefault();
+                Auth.logout();
+                showToast('Logged out successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1000);
+            });
+        });
+    </script>
+
 </body>
+
 </html>
