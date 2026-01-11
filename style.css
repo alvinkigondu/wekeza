@@ -231,6 +231,41 @@ footer {
     max-width: 400px;
     text-align: center;
 }
+/*Tile style with hover an focus effects*/
+.tile {
+    background-color: var(--background-card);
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: transform 280ms cubic-bezier(.2,.8,.2,1), box-shadow 280ms ease, border-color 200ms ease;
+    will-change: transform, box-shadow;
+    cursor: pointer;
+}
+
+.tile h3 {
+    transition: color 200ms ease;
+}
+
+.tile p {
+    transition: color 200ms ease;
+    color: var(--text-muted);
+}
+
+.tile:hover,
+.tile:focus {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 14px 30px rgba(2,6,23,0.6), 0 6px 12px rgba(59,130,246,0.06);
+    border-color: rgba(255,255,255,0.12);
+}
+
+.tile:hover h3,
+.tile:focus h3 {
+    color: var(--primary-color);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tile { transition: none; transform: none; }
+}
 /* Container for the whole logo area */
 .brand {
     display: flex;
