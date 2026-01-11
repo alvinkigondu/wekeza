@@ -5,262 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wekeza - Financial Dashboard</title>
-    <style>
-        /* --- 1. VARIABLES & RESET --- */
-        :root {
-            --bg-body: #0f172a;
-            /* Deep Slate */
-            --bg-panel: #1e293b;
-            /* Lighter Slate for cards */
-            --bg-sidebar: #020617;
-            /* Darkest for sidebar */
-            --text-main: #f8fafc;
-            /* White/Grey */
-            --text-muted: #94a3b8;
-            /* Muted Grey */
-            --accent-blue: #3b82f6;
-            /* Primary Action */
-            --accent-green: #10b981;
-            /* Positive Financials */
-            --accent-red: #ef4444;
-            /* Negative/Risk */
-            --border-color: rgba(255, 255, 255, 0.08);
-            --font-family: 'Inter', 'Segoe UI', sans-serif;
-        }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: var(--font-family);
-        }
+    <!-- Preconnect for Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* --- 2. SIDEBAR --- */
-        aside.sidebar {
-            width: 260px;
-            background-color: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-        }
-
-        .brand {
-            font-size: 24px;
-            font-weight: 700;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 40px;
-        }
-
-        .brand-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--accent-blue);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        nav ul {
-            list-style: none;
-        }
-
-        nav li {
-            margin-bottom: 8px;
-        }
-
-        nav a {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            color: var(--text-muted);
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.2s;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        nav a:hover,
-        nav a.active {
-            background-color: rgba(59, 130, 246, 0.1);
-            color: var(--accent-blue);
-        }
-
-        nav a.active {
-            border-left: 3px solid var(--accent-blue);
-        }
-
-        /* --- 3. MAIN CONTENT AREA --- */
-        main {
-            flex: 1;
-            overflow-y: auto;
-            padding: 32px;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-        }
-
-        .header-title h1 {
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .header-title p {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #475569, #334155);
-            border-radius: 50%;
-            border: 2px solid var(--bg-body);
-        }
-
-        /* --- 4. DASHBOARD GRID --- */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .card {
-            background-color: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            position: relative;
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .card-label {
-            color: var(--text-muted);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-        }
-
-        .card-value {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: white;
-        }
-
-        .card-indicator {
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .indicator-up {
-            color: var(--accent-green);
-        }
-
-        .indicator-down {
-            color: var(--accent-red);
-        }
-
-        .indicator-neutral {
-            color: var(--text-muted);
-        }
-
-        /* Special Styling for Portfolio Card (simulating a chart background) */
-        .card.featured {
-            background: linear-gradient(to bottom, var(--bg-panel), #1e293b),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(59, 130, 246, 0.1)" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,250.7C960,235,1056,181,1152,165.3C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
-            background-size: cover;
-            background-position: bottom;
-        }
-
-        /* --- 5. DATA TABLE SECTION --- */
-        .section-container {
-            background-color: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        th {
-            text-align: left;
-            color: var(--text-muted);
-            font-weight: 500;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        td {
-            padding: 16px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            color: #e2e8f0;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .status-active {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--accent-green);
-        }
-
-        .status-idle {
-            background: rgba(148, 163, 184, 0.15);
-            color: var(--text-muted);
-        }
-    </style>
+    <!-- External Styles -->
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 
 <body>
@@ -272,16 +24,16 @@
         </div>
         <nav>
             <ul>
-                <li><a href="#" class="active">Overview</a></li>
-                <li><a href="#">Active Agents</a></li>
-                <li><a href="#">Risk Management</a></li>
-                <li><a href="#">Portfolio</a></li>
-                <li><a href="#">System Logs</a></li>
+                <li><a href="#" class="nav-link active" data-target="overview">Overview</a></li>
+                <li><a href="#" class="nav-link" data-target="agents">Active Agents</a></li>
+                <li><a href="#" class="nav-link" data-target="risk">Risk Management</a></li>
+                <li><a href="#" class="nav-link" data-target="portfolio">Portfolio</a></li>
+                <li><a href="#" class="nav-link" data-target="logs">System Logs</a></li>
             </ul>
         </nav>
         <nav style="margin-top: auto;">
             <ul>
-                <li><a href="#">Settings</a></li>
+                <li><a href="#" class="nav-link" data-target="settings">Settings</a></li>
                 <li><a href="#" id="logoutBtn" style="color: #ef4444;">Logout</a></li>
             </ul>
         </nav>
@@ -290,8 +42,8 @@
     <main>
         <header>
             <div class="header-title">
-                <h1>System Overview</h1>
-                <p>Real-time market insights and agent performance</p>
+                <h1 id="pageTitle">System Overview</h1>
+                <p id="pageSubtitle">Real-time market insights and agent performance</p>
             </div>
             <div class="user-profile">
                 <div style="text-align: right; margin-right: 8px;">
@@ -302,113 +54,711 @@
             </div>
         </header>
 
-        <div class="grid-container">
-            <div class="card featured">
-                <div class="card-label">Total Portfolio Value</div>
-                <div class="card-value">$124,580.00</div>
-                <div class="card-indicator indicator-up">
-                    <span>▲ +2.4%</span>
-                    <span style="color: var(--text-muted); margin-left: 4px;">vs yesterday</span>
+        <!-- VIEW: OVERVIEW -->
+        <div id="view-overview" class="view-section">
+            <div class="grid-container">
+                <!-- Featured Card with Chart -->
+                <div class="card featured">
+                    <div style="position: relative; z-index: 2;">
+                        <div class="card-label">Total Portfolio Value</div>
+                        <div class="card-value">$124,580.00</div>
+                        <div class="card-indicator indicator-up">
+                            <span>▲ +2.4%</span>
+                            <span style="color: var(--text-muted); margin-left: 4px;">vs yesterday</span>
+                        </div>
+                    </div>
+                    <!-- Canvas for Chart.js -->
+                    <div class="chart-container-mini">
+                        <canvas id="portfolioChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">Active AI Agents</div>
+                    <div class="card-value">12 <span
+                            style="font-size: 14px; color: var(--text-muted); font-weight: 400;">/
+                            20</span></div>
+                    <div class="card-indicator indicator-up">
+                        <span>• All Systems Operational</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">Risk Exposure (VaR)</div>
+                    <div class="card-value">Low</div>
+                    <div class="card-indicator indicator-neutral">
+                        <span>Stable volatility detected</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">Market Sentiment</div>
+                    <div class="card-value" style="color: var(--accent-green);">Positive</div>
+                    <div class="card-indicator indicator-up">
+                        <span>▲ Bullish Trend</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-label">Active AI Agents</div>
-                <div class="card-value">12 <span style="font-size: 14px; color: var(--text-muted); font-weight: 400;">/
-                        20</span></div>
-                <div class="card-indicator indicator-up">
-                    <span>• All Systems Operational</span>
+            <div class="section-container">
+                <div class="section-header">
+                    <h3>Recent Agent Activity</h3>
+                    <button id="viewAllBtn"
+                        style="background:none; border:none; color:var(--accent-blue); cursor:pointer;">View
+                        All</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Agent ID</th>
+                            <th>Strategy</th>
+                            <th>Action</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>AGT-001</td>
+                            <td>Forex Scalping</td>
+                            <td>Buy EUR/USD @ 1.085</td>
+                            <td>2 mins ago</td>
+                            <td><span class="status-badge status-active">Executing</span></td>
+                        </tr>
+                        <tr>
+                            <td>AGT-004</td>
+                            <td>Crypto Arbitrage</td>
+                            <td>Sell BTC @ 42,500</td>
+                            <td>15 mins ago</td>
+                            <td><span class="status-badge status-active">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>AGT-009</td>
+                            <td>Index Balancing</td>
+                            <td>Idle - Waiting for triggers</td>
+                            <td>1 hour ago</td>
+                            <td><span class="status-badge status-idle">Idle</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: ACTIVE AGENTS -->
+        <div id="view-agents" class="view-section hidden">
+            <!-- Agent Stats Summary -->
+            <div class="grid-container grid-3" style="margin-bottom: 24px;">
+                <div class="card">
+                    <div class="card-label">Total Agents</div>
+                    <div class="card-value">12</div>
+                    <div class="card-indicator indicator-neutral">
+                        <span>Deployed in system</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-label">Active Now</div>
+                    <div class="card-value" style="color: var(--accent-green);">8</div>
+                    <div class="card-indicator indicator-up">
+                        <span>• Running trades</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-label">Today's Profit</div>
+                    <div class="card-value" style="color: var(--accent-green);">+$1,847</div>
+                    <div class="card-indicator indicator-up">
+                        <span>▲ +2.1% from agents</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-label">Risk Exposure (VaR)</div>
-                <div class="card-value">Low</div>
-                <div class="card-indicator indicator-neutral">
-                    <span>Stable volatility detected</span>
+            <!-- Agent Cards Grid -->
+            <div class="agents-grid" id="agentsGrid">
+                <!-- Agent Card 1 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-id">AGT-001</div>
+                        <span class="status-badge status-active">Active</span>
+                    </div>
+                    <div class="agent-name">Forex Scalper Pro</div>
+                    <div class="agent-strategy">Strategy: Mean Reversion</div>
+                    <div class="agent-stats">
+                        <div class="agent-stat">
+                            <span class="stat-label">Today P&L</span>
+                            <span class="stat-value positive">+$342.50</span>
+                        </div>
+                        <div class="agent-stat">
+                            <span class="stat-label">Win Rate</span>
+                            <span class="stat-value">68%</span>
+                        </div>
+                        <div class="agent-stat">
+                            <span class="stat-label">Trades</span>
+                            <span class="stat-value">47</span>
+                        </div>
+                    </div>
+                    <div class="agent-actions">
+                        <button class="btn-agent btn-pause">Pause</button>
+                        <button class="btn-agent btn-config">Configure</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <div class="card-label">Market Sentiment</div>
-                <div class="card-value" style="color: var(--accent-green);">Positive</div>
-                <div class="card-indicator indicator-up">
-                    <span>▲ Bullish Trend</span>
+                <!-- Agent Card 2 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-id">AGT-002</div>
+                        <span class="status-badge status-active">Active</span>
+                    </div>
+                    <div class="agent-name">Crypto Momentum</div>
+                    <div class="agent-strategy">Strategy: Trend Following</div>
+                    <div class="agent-stats">
+                        <div class="agent-stat">
+                            <span class="stat-label">Today P&L</span>
+                            <span class="stat-value positive">+$891.20</span>
+                        </div>
+                        <div class="agent-stat">
+                            <span class="stat-label">Win Rate</span>
+                            <span class="stat-value">72%</span>
+                        </div>
+                        <div class="agent-stat">
+                            <span class="stat-label">Trades</span>
+                            <span class="stat-value">23</span>
+                        </div>
+                    </div>
+                    <div class="agent-actions">
+                        <button class="btn-agent btn-pause">Pause</button>
+                        <button class="btn-agent btn-config">Configure</button>
+                    </div>
+                </div>
+
+                <!-- Agent Card 3 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-id">AGT-003</div>
+                        <span class="status-badge status-idle">Paused</span>
+                    </div>
+                    <div class="agent-name">Index Balancer</div>
+                    <div class="agent-strategy">Strategy: Portfolio Rebalancing</div>
+                    <div class="agent-stats">
+                        <div class="agent-stat">
+                            <span class="stat-label">Today P&L</span>
+                            <span class="stat-value">$0.00</span>
+                        </div>
+                        <div class="agent-stat">
+                            <span class="stat-label">Win Rate</span>
+                            <span class="stat-value">81%</span>
+                        </div>
+                        <div class="agent-stat">
+                            <span class="stat-label">Trades</span>
+                            <span class="stat-value">0</span>
+                        </div>
+                    </div>
+                    <div class="agent-actions">
+                        <button class="btn-agent btn-start">Start</button>
+                        <button class="btn-agent btn-config">Configure</button>
+                    </div>
+                </div>
+
+                <!-- Agent Card 4 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-id">AGT-004</div>
+                        <span class="status-badge status-active">Active</span>
+                    </div>
+                    <div class="agent-name">Arbitrage Hunter</div>
+                    <div class="agent-strategy">Strategy: Cross-Exchange Arbitrage</div>
+                    <div class="agent-stats">
+                        <div class="agent-stat">
+                            <span class="stat-label">Today P&L</span>
+                            <span class="stat-value positive">+$156.80</span>
+                        </div>
+                        <div class="agent-stat">
+                            <span class="stat-label">Win Rate</span>
+                            <span class="stat-value">94%</span>
+                        </div>
+                        <div class="agent-stat">
+                            <span class="stat-label">Trades</span>
+                            <span class="stat-value">112</span>
+                        </div>
+                    </div>
+                    <div class="agent-actions">
+                        <button class="btn-agent btn-pause">Pause</button>
+                        <button class="btn-agent btn-config">Configure</button>
+                    </div>
+                </div>
+
+                <!-- Agent Card 5 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-id">AGT-005</div>
+                        <span class="status-badge status-error">Error</span>
+                    </div>
+                    <div class="agent-name">News Sentiment Bot</div>
+                    <div class="agent-strategy">Strategy: NLP Sentiment Analysis</div>
+                    <div class="agent-stats">
+                        <div class="agent-stat">
+                            <span class="stat-label">Today P&L</span>
+                            <span class="stat-value negative">-$45.00</span>
+                        </div>
+                        <div class="agent-stat">
+                            <span class="stat-label">Win Rate</span>
+                            <span class="stat-value">52%</span>
+                        </div>
+                        <div class="agent-stat">
+                            <span class="stat-label">Trades</span>
+                            <span class="stat-value">8</span>
+                        </div>
+                    </div>
+                    <div class="agent-actions">
+                        <button class="btn-agent btn-restart">Restart</button>
+                        <button class="btn-agent btn-config">Configure</button>
+                    </div>
+                </div>
+
+                <!-- Agent Card 6 -->
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-id">AGT-006</div>
+                        <span class="status-badge status-active">Active</span>
+                    </div>
+                    <div class="agent-name">Options Gamma</div>
+                    <div class="agent-strategy">Strategy: Delta Hedging</div>
+                    <div class="agent-stats">
+                        <div class="agent-stat">
+                            <span class="stat-label">Today P&L</span>
+                            <span class="stat-value positive">+$502.30</span>
+                        </div>
+                        <div class="agent-stat">
+                            <span class="stat-label">Win Rate</span>
+                            <span class="stat-value">76%</span>
+                        </div>
+                        <div class="agent-stat">
+                            <span class="stat-label">Trades</span>
+                            <span class="stat-value">31</span>
+                        </div>
+                    </div>
+                    <div class="agent-actions">
+                        <button class="btn-agent btn-pause">Pause</button>
+                        <button class="btn-agent btn-config">Configure</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="section-container">
-            <div class="section-header">
-                <h3>Recent Agent Activity</h3>
-                <button style="background:none; border:none; color:var(--accent-blue); cursor:pointer;">View
-                    All</button>
+        <!-- VIEW: RISK MANAGEMENT -->
+        <div id="view-risk" class="view-section hidden">
+            <!-- Risk Summary Cards -->
+            <div class="grid-container grid-3" style="margin-bottom: 24px;">
+                <div class="card">
+                    <div class="card-label">Value at Risk (95%)</div>
+                    <div class="card-value" style="color: var(--accent-green);">$2,450</div>
+                    <div class="card-indicator indicator-up">
+                        <span>• Low risk level</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-label">Max Drawdown</div>
+                    <div class="card-value">-4.2%</div>
+                    <div class="card-indicator indicator-neutral">
+                        <span>Within acceptable limits</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-label">Portfolio Beta</div>
+                    <div class="card-value">1.15</div>
+                    <div class="card-indicator indicator-neutral">
+                        <span>Slightly aggressive</span>
+                    </div>
+                </div>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Agent ID</th>
-                        <th>Strategy</th>
-                        <th>Action</th>
-                        <th>Time</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>AGT-001</td>
-                        <td>Forex Scalping</td>
-                        <td>Buy EUR/USD @ 1.085</td>
-                        <td>2 mins ago</td>
-                        <td><span class="status-badge status-active">Executing</span></td>
-                    </tr>
-                    <tr>
-                        <td>AGT-004</td>
-                        <td>Crypto Arbitrage</td>
-                        <td>Sell BTC @ 42,500</td>
-                        <td>15 mins ago</td>
-                        <td><span class="status-badge status-active">Completed</span></td>
-                    </tr>
-                    <tr>
-                        <td>AGT-009</td>
-                        <td>Index Balancing</td>
-                        <td>Idle - Waiting for triggers</td>
-                        <td>1 hour ago</td>
-                        <td><span class="status-badge status-idle">Idle</span></td>
-                    </tr>
-                </tbody>
-            </table>
+
+            <!-- Risk Charts and Settings Row -->
+            <div class="grid-container grid-2-1" style="margin-bottom: 24px;">
+                <!-- Exposure Chart -->
+                <div class="card">
+                    <div class="card-label">Exposure by Asset Class</div>
+                    <div style="height: 280px; position: relative;">
+                        <canvas id="exposureChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- VaR Gauge Display -->
+                <div class="card">
+                    <div class="card-label">Risk Level Gauge</div>
+                    <div class="risk-gauge">
+                        <div class="gauge-container">
+                            <div class="gauge-fill" style="--gauge-value: 25%;"></div>
+                            <div class="gauge-label">LOW</div>
+                        </div>
+                        <div class="gauge-scale">
+                            <span>Safe</span>
+                            <span>Moderate</span>
+                            <span>High</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Settings Panel -->
+            <div class="section-container">
+                <div class="section-header">
+                    <h3>Risk Parameters</h3>
+                    <button class="btn-save" id="saveRiskSettings">Save Changes</button>
+                </div>
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <label class="setting-label">Max Position Size</label>
+                        <div class="setting-control">
+                            <input type="range" id="maxPositionSize" min="1" max="25" value="10" class="slider">
+                            <span class="slider-value" id="maxPositionValue">10%</span>
+                        </div>
+                        <span class="setting-desc">Maximum % of portfolio in single position</span>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">Stop Loss Default</label>
+                        <div class="setting-control">
+                            <input type="range" id="stopLossDefault" min="1" max="15" value="5" class="slider">
+                            <span class="slider-value" id="stopLossValue">5%</span>
+                        </div>
+                        <span class="setting-desc">Default stop loss for new positions</span>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">Daily Loss Limit</label>
+                        <div class="setting-control">
+                            <input type="range" id="dailyLossLimit" min="1" max="10" value="3" class="slider">
+                            <span class="slider-value" id="dailyLossValue">3%</span>
+                        </div>
+                        <span class="setting-desc">Halt trading if daily loss exceeds this</span>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">Leverage Limit</label>
+                        <div class="setting-control">
+                            <input type="range" id="leverageLimit" min="1" max="10" value="2" class="slider">
+                            <span class="slider-value" id="leverageValue">2x</span>
+                        </div>
+                        <span class="setting-desc">Maximum allowed leverage</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: PORTFOLIO -->
+        <div id="view-portfolio" class="view-section hidden">
+            <!-- 1. Portfolio Summary Cards -->
+            <div class="grid-container grid-3" style="margin-bottom: 24px;">
+                <div class="card">
+                    <div class="card-label">Net Worth</div>
+                    <div class="card-value">$124,580.00</div>
+                    <div class="card-indicator indicator-up">
+                        <span>All Assets Combined</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-label">Total Profit/Loss</div>
+                    <div class="card-value" style="color: var(--accent-green);">+$24,500.00</div>
+                    <div class="card-indicator indicator-up">
+                        <span>▲ +19.6% All Time</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-label">Daily Change</div>
+                    <div class="card-value" style="color: var(--accent-green);">+$1,240.00</div>
+                    <div class="card-indicator indicator-up">
+                        <span>▲ +1.1% Today</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Charts Row -->
+            <div class="grid-container grid-2-1" style="margin-bottom: 24px;">
+                <!-- Performance Chart -->
+                <div class="card">
+                    <div class="card-label" style="display: flex; justify-content: space-between;">
+                        <span>Performance History</span>
+                        <div style="font-size: 11px;">
+                            <span style="margin-right: 8px; color: var(--accent-blue); cursor: pointer;">1W</span>
+                            <span style="margin-right: 8px; cursor: pointer;">1M</span>
+                            <span style="cursor: pointer;">1Y</span>
+                        </div>
+                    </div>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="portfolioPerformanceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Allocation Chart -->
+                <div class="card">
+                    <div class="card-label">Asset Allocation</div>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="allocationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Holdings Table -->
+            <div class="section-container">
+                <div class="section-header">
+                    <h3>Current Holdings</h3>
+                    <button style="background:none; border:none; color:var(--accent-blue); cursor:pointer;">Export
+                        CSV</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Asset</th>
+                            <th>Type</th>
+                            <th>Quantity</th>
+                            <th>Avg Price</th>
+                            <th>Current Price</th>
+                            <th>Total Value</th>
+                            <th>Profit/Loss</th>
+                        </tr>
+                    </thead>
+                    <tbody id="holdingsTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: SYSTEM LOGS -->
+        <div id="view-logs" class="view-section hidden">
+            <!-- Logs Filter Bar -->
+            <div class="logs-filter-bar">
+                <div class="filter-group">
+                    <label>Level:</label>
+                    <select id="logLevelFilter" class="filter-select">
+                        <option value="all">All Levels</option>
+                        <option value="info">INFO</option>
+                        <option value="warn">WARNING</option>
+                        <option value="error">ERROR</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Agent:</label>
+                    <select id="logAgentFilter" class="filter-select">
+                        <option value="all">All Agents</option>
+                        <option value="AGT-001">AGT-001</option>
+                        <option value="AGT-002">AGT-002</option>
+                        <option value="AGT-003">AGT-003</option>
+                        <option value="AGT-004">AGT-004</option>
+                        <option value="AGT-005">AGT-005</option>
+                        <option value="System">System</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <input type="text" placeholder="Search logs..." id="logSearch" class="filter-search">
+                </div>
+                <button class="btn-refresh" id="refreshLogs">Refresh</button>
+            </div>
+
+            <!-- Logs Table -->
+            <div class="section-container">
+                <div class="section-header">
+                    <h3>Recent Activity Logs</h3>
+                    <span class="log-count">Showing 15 of 248 logs</span>
+                </div>
+                <table class="logs-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 160px;">Timestamp</th>
+                            <th style="width: 80px;">Level</th>
+                            <th style="width: 100px;">Source</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody">
+                        <tr>
+                            <td class="log-time">2026-01-10 12:58:42</td>
+                            <td><span class="log-badge log-info">INFO</span></td>
+                            <td>AGT-001</td>
+                            <td>Executed BUY order: EUR/USD @ 1.0852, qty: 10,000 units</td>
+                        </tr>
+                        <tr>
+                            <td class="log-time">2026-01-10 12:57:15</td>
+                            <td><span class="log-badge log-info">INFO</span></td>
+                            <td>AGT-004</td>
+                            <td>Arbitrage opportunity detected: BTC price delta +0.3%</td>
+                        </tr>
+                        <tr>
+                            <td class="log-time">2026-01-10 12:55:03</td>
+                            <td><span class="log-badge log-warn">WARN</span></td>
+                            <td>System</td>
+                            <td>API rate limit approaching: 85% of quota used</td>
+                        </tr>
+                        <tr>
+                            <td class="log-time">2026-01-10 12:52:28</td>
+                            <td><span class="log-badge log-error">ERROR</span></td>
+                            <td>AGT-005</td>
+                            <td>Connection timeout: News feed API unresponsive after 30s</td>
+                        </tr>
+                        <tr>
+                            <td class="log-time">2026-01-10 12:50:11</td>
+                            <td><span class="log-badge log-info">INFO</span></td>
+                            <td>AGT-002</td>
+                            <td>Position closed: BTC/USD with +$342.50 profit</td>
+                        </tr>
+                        <tr>
+                            <td class="log-time">2026-01-10 12:48:45</td>
+                            <td><span class="log-badge log-info">INFO</span></td>
+                            <td>AGT-006</td>
+                            <td>Delta hedge rebalance complete: Options portfolio neutral</td>
+                        </tr>
+                        <tr>
+                            <td class="log-time">2026-01-10 12:45:22</td>
+                            <td><span class="log-badge log-warn">WARN</span></td>
+                            <td>AGT-001</td>
+                            <td>Slippage detected: Order filled 2 pips above target</td>
+                        </tr>
+                        <tr>
+                            <td class="log-time">2026-01-10 12:42:08</td>
+                            <td><span class="log-badge log-info">INFO</span></td>
+                            <td>System</td>
+                            <td>Daily risk check passed: All metrics within limits</td>
+                        </tr>
+                        <tr>
+                            <td class="log-time">2026-01-10 12:40:00</td>
+                            <td><span class="log-badge log-info">INFO</span></td>
+                            <td>AGT-004</td>
+                            <td>Executed cross-exchange arbitrage: +$28.50 captured</td>
+                        </tr>
+                        <tr>
+                            <td class="log-time">2026-01-10 12:35:17</td>
+                            <td><span class="log-badge log-error">ERROR</span></td>
+                            <td>AGT-005</td>
+                            <td>Sentiment analysis failed: Invalid response from FinBERT model</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Pagination -->
+                <div class="logs-pagination">
+                    <button class="btn-page" disabled>← Previous</button>
+                    <span class="page-info">Page 1 of 25</span>
+                    <button class="btn-page">Next →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: SETTINGS -->
+        <div id="view-settings" class="view-section hidden">
+            <!-- Profile Section -->
+            <div class="section-container" style="margin-bottom: 24px;">
+                <div class="section-header">
+                    <h3>Profile Information</h3>
+                    <button class="btn-save" id="saveProfile">Save Changes</button>
+                </div>
+                <div class="profile-grid">
+                    <div class="profile-avatar-section">
+                        <div class="profile-avatar-large"></div>
+                        <button class="btn-upload">Change Photo</button>
+                    </div>
+                    <div class="profile-fields">
+                        <div class="field-group">
+                            <label>Full Name</label>
+                            <input type="text" id="profileName" class="settings-input" placeholder="Your name">
+                        </div>
+                        <div class="field-group">
+                            <label>Email Address</label>
+                            <input type="email" id="profileEmail" class="settings-input" placeholder="your@email.com"
+                                disabled>
+                        </div>
+                        <div class="field-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="profilePhone" class="settings-input" placeholder="+1 (555) 123-4567">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notification Preferences -->
+            <div class="section-container" style="margin-bottom: 24px;">
+                <div class="section-header">
+                    <h3>Notification Preferences</h3>
+                </div>
+                <div class="toggle-list">
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <span class="toggle-title">Trade Executed</span>
+                            <span class="toggle-desc">Get notified when an agent executes a trade</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <span class="toggle-title">Risk Alerts</span>
+                            <span class="toggle-desc">Immediate alerts when risk limits are approached</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <span class="toggle-title">Daily Summary</span>
+                            <span class="toggle-desc">Receive daily P&L and performance summary</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <span class="toggle-title">Agent Errors</span>
+                            <span class="toggle-desc">Get notified when an agent encounters an error</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <span class="toggle-title">Marketing Emails</span>
+                            <span class="toggle-desc">Receive news, tips, and product updates</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="section-container danger-zone">
+                <div class="section-header">
+                    <h3 style="color: var(--accent-red);">Danger Zone</h3>
+                </div>
+                <div class="danger-actions">
+                    <div class="danger-item">
+                        <div>
+                            <span class="danger-title">Export All Data</span>
+                            <span class="danger-desc">Download all your trading history and settings</span>
+                        </div>
+                        <button class="btn-danger-secondary">Export</button>
+                    </div>
+                    <div class="danger-item">
+                        <div>
+                            <span class="danger-title">Delete Account</span>
+                            <span class="danger-desc">Permanently delete your account and all data</span>
+                        </div>
+                        <button class="btn-danger">Delete Account</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </main>
 
-    <!-- Authentication Script -->
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Logic Scripts -->
     <script src="js/auth.js"></script>
-    <script>
-        // Protect this page - redirect to login if not authenticated
-        document.addEventListener('DOMContentLoaded', function () {
-            if (!Auth.isLoggedIn()) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // Display user's name
-            const currentUser = Auth.getCurrentUser();
-            if (currentUser) {
-                document.getElementById('userName').textContent = currentUser.fullName;
-            }
-
-            // Handle logout
-            document.getElementById('logoutBtn').addEventListener('click', function (e) {
-                e.preventDefault();
-                Auth.logout();
-                showToast('Logged out successfully!', 'success');
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 1000);
-            });
-        });
-    </script>
+    <script src="js/dashboard.js"></script>
 
 </body>
 
