@@ -1,76 +1,55 @@
-// Wekeza Authentication System
-// Uses localStorage to store user accounts
+/**
+ * Wekeza Authentication System
+ * Now integrated with backend API
+ */
 
 const Auth = {
-    // Get all users from localStorage
-    getUsers() {
-        const users = localStorage.getItem('wekeza_users');
-        return users ? JSON.parse(users) : [];
+    // Check if user is logged in (has valid token)
+    isLoggedIn() {
+        return API.getToken() !== null;
     },
 
-    // Save users to localStorage
-    saveUsers(users) {
-        localStorage.setItem('wekeza_users', JSON.stringify(users));
-    },
-
-    // Register a new user
-    register(fullName, email, password) {
-        const users = this.getUsers();
-
-        // Check if user already exists
-        if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
-            return { success: false, message: 'An account with this email already exists.' };
-        }
-
-        // Add new user
-        const newUser = {
-            id: Date.now(),
-            fullName,
-            email: email.toLowerCase(),
-            password, // In production, this should be hashed
-            createdAt: new Date().toISOString()
-        };
-
-        users.push(newUser);
-        this.saveUsers(users);
-
-        return { success: true, message: 'Account created successfully!' };
-    },
-
-    // Login user
-    login(email, password) {
-        const users = this.getUsers();
-        const user = users.find(u =>
-            u.email.toLowerCase() === email.toLowerCase() && u.password === password
-        );
-
-        if (user) {
-            // Store current session
-            localStorage.setItem('wekeza_current_user', JSON.stringify({
-                id: user.id,
-                fullName: user.fullName,
-                email: user.email
-            }));
-            return { success: true, user };
-        }
-
-        return { success: false, message: 'Invalid email or password.' };
-    },
-
-    // Get current logged-in user
+    // Get current logged-in user from localStorage cache
     getCurrentUser() {
         const user = localStorage.getItem('wekeza_current_user');
         return user ? JSON.parse(user) : null;
     },
 
-    // Logout
-    logout() {
-        localStorage.removeItem('wekeza_current_user');
+    // Register a new user via API
+    async register(fullName, email, password) {
+        try {
+            const result = await API.auth.register(fullName, email, password);
+            return { success: true, message: 'Account created successfully!' };
+        } catch (error) {
+            return { success: false, message: error.message };
+        }
     },
 
-    // Check if user is logged in
-    isLoggedIn() {
-        return this.getCurrentUser() !== null;
+    // Login user via API
+    async login(email, password) {
+        try {
+            const result = await API.auth.login(email, password);
+            return { success: true, user: result.user };
+        } catch (error) {
+            return { success: false, message: error.message };
+        }
+    },
+
+    // Logout - clear tokens and user data
+    logout() {
+        API.auth.logout();
+    },
+
+    // Refresh user profile from API
+    async refreshProfile() {
+        try {
+            const user = await API.auth.getProfile();
+            localStorage.setItem('wekeza_current_user', JSON.stringify(user));
+            return user;
+        } catch (error) {
+            console.error('Failed to refresh profile:', error);
+            return null;
+        }
     }
 };
 
@@ -137,13 +116,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle Login Form
     if (loginForm) {
-        loginForm.addEventListener('submit', function (e) {
+        loginForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
 
-            const result = Auth.login(email, password);
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Logging in...';
+
+            const result = await Auth.login(email, password);
 
             if (result.success) {
                 showToast('Login successful! Redirecting...', 'success');
@@ -152,19 +136,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 }, 1000);
             } else {
                 showToast(result.message, 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Log In';
             }
         });
     }
 
     // Handle Signup Form
     if (signupForm) {
-        signupForm.addEventListener('submit', function (e) {
+        signupForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const fullName = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
             const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const submitBtn = signupForm.querySelector('button[type="submit"]');
 
             // Validate passwords match
             if (password !== confirmPassword) {
@@ -178,7 +165,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            const result = Auth.register(fullName, email, password);
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating account...';
+
+            const result = await Auth.register(fullName, email, password);
 
             if (result.success) {
                 showToast(result.message + ' Redirecting to login...', 'success');
@@ -187,6 +178,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 }, 1500);
             } else {
                 showToast(result.message, 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create Account';
             }
         });
     }

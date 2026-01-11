@@ -1,244 +1,158 @@
-// Dashboard Logic
+/**
+ * Wekeza Dashboard Controller
+ * Handles view navigation, user data display, and dashboard interactions
+ */
 
 document.addEventListener('DOMContentLoaded', function () {
-    // 1. Authentication Check
-    if (typeof Auth !== 'undefined' && !Auth.isLoggedIn()) {
+    // Check if user is logged in
+    if (!API.getToken()) {
         window.location.href = 'login.html';
         return;
     }
 
-    // 2. Load User Data
-    if (typeof Auth !== 'undefined') {
-        const currentUser = Auth.getCurrentUser();
-        if (currentUser) {
-            document.getElementById('userName').textContent = currentUser.fullName;
+    // Load user data
+    loadUserProfile();
 
-            // Also populate settings profile if on that page
-            const profileNameInput = document.getElementById('profileName');
-            const profileEmailInput = document.getElementById('profileEmail');
-            if (profileNameInput) profileNameInput.value = currentUser.fullName;
-            if (profileEmailInput) profileEmailInput.value = currentUser.email;
+    // Set up navigation
+    setupNavigation();
+
+    // Set up logout
+    setupLogout();
+
+    // Initialize charts
+    initializeCharts();
+
+    // Set up slider controls
+    setupSliders();
+});
+
+// ==================== User Profile ====================
+
+async function loadUserProfile() {
+    try {
+        const user = JSON.parse(localStorage.getItem('wekeza_current_user'));
+        if (user) {
+            document.getElementById('userName').textContent = user.full_name || 'User';
+            if (document.getElementById('profileName')) {
+                document.getElementById('profileName').value = user.full_name || '';
+            }
+            if (document.getElementById('profileEmail')) {
+                document.getElementById('profileEmail').value = user.email || '';
+            }
         }
+    } catch (error) {
+        console.error('Error loading user profile:', error);
     }
+}
 
-    // 3. Logout Handler
+// ==================== Navigation ====================
+
+function setupNavigation() {
+    const navLinks = document.querySelectorAll('.nav-link[data-target]');
+    const viewSections = document.querySelectorAll('.view-section');
+    const pageTitle = document.getElementById('pageTitle');
+    const pageSubtitle = document.getElementById('pageSubtitle');
+
+    const pageTitles = {
+        'overview': { title: 'System Overview', subtitle: 'Real-time market insights and agent performance' },
+        'agents': { title: 'Active Agents', subtitle: 'Monitor and control your AI trading agents' },
+        'risk': { title: 'Risk Management', subtitle: 'Configure risk parameters and exposure limits' },
+        'portfolio': { title: 'Portfolio', subtitle: 'View your holdings and performance metrics' },
+        'logs': { title: 'System Logs', subtitle: 'Review system activity and agent operations' },
+        'settings': { title: 'Settings', subtitle: 'Manage your account and preferences' }
+    };
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const target = this.getAttribute('data-target');
+
+            // Update active nav link
+            navLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+
+            // Show target view, hide others
+            viewSections.forEach(section => {
+                if (section.id === `view-${target}`) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+            });
+
+            // Update page title
+            if (pageTitles[target]) {
+                pageTitle.textContent = pageTitles[target].title;
+                pageSubtitle.textContent = pageTitles[target].subtitle;
+            }
+        });
+    });
+
+    // View All button - switch to agents view
+    const viewAllBtn = document.getElementById('viewAllBtn');
+    if (viewAllBtn) {
+        viewAllBtn.addEventListener('click', function () {
+            const agentsLink = document.querySelector('.nav-link[data-target="agents"]');
+            if (agentsLink) agentsLink.click();
+        });
+    }
+}
+
+// ==================== Logout ====================
+
+function setupLogout() {
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            if (typeof Auth !== 'undefined') {
-                Auth.logout();
-                if (typeof showToast === 'function') showToast('Logged out successfully!', 'success');
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 1000);
-            }
-        });
-    }
-
-    // 4. Initialize Navigation (Do this FIRST to ensure UI works)
-    initNavigation();
-
-    // 5. Initialize Charts (Safely)
-    try {
-        if (typeof Chart !== 'undefined') {
-            initPortfolioChart(); // Overview Chart
-            initPortfolioView();  // Detailed Portfolio View
-            initRiskView();       // Risk Management View
-        } else {
-            console.warn('Chart.js not loaded. Visualizations will be disabled.');
-        }
-    } catch (error) {
-        console.error('Error initializing charts:', error);
-    }
-
-    // 6. Initialize Settings
-    initSettingsView();
-});
-
-function initNavigation() {
-    const navLinks = document.querySelectorAll('.nav-link');
-    const views = document.querySelectorAll('.view-section');
-    const pageTitle = document.getElementById('pageTitle');
-    const pageSubtitle = document.getElementById('pageSubtitle');
-    const viewAllBtn = document.getElementById('viewAllBtn');
-
-    // Helper to switch views
-    function switchView(targetId) {
-        // Update Sidebar Active State
-        navLinks.forEach(link => {
-            if (link.dataset.target === targetId) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
-        });
-
-        // Toggle Views
-        views.forEach(view => {
-            if (view.id === `view-${targetId}`) {
-                view.classList.remove('hidden');
-                // Re-trigger animation
-                view.style.animation = 'none';
-                view.offsetHeight; /* trigger reflow */
-                view.style.animation = null;
-            } else {
-                view.classList.add('hidden');
-            }
-        });
-
-        // Update Header Titles based on view
-        updateHeader(targetId);
-    }
-
-    // Helper to update header text
-    function updateHeader(viewId) {
-        switch (viewId) {
-            case 'overview':
-                pageTitle.textContent = 'System Overview';
-                pageSubtitle.textContent = 'Real-time market insights and agent performance';
-                break;
-            case 'agents':
-                pageTitle.textContent = 'Active Agents';
-                pageSubtitle.textContent = 'Manage and configure your trading bots';
-                break;
-            case 'risk':
-                pageTitle.textContent = 'Risk Management';
-                pageSubtitle.textContent = 'Global risk settings and exposure limits';
-                break;
-            case 'portfolio':
-                pageTitle.textContent = 'Portfolio Performance';
-                pageSubtitle.textContent = 'Historical data and asset allocation';
-                break;
-            case 'logs':
-                pageTitle.textContent = 'System Logs';
-                pageSubtitle.textContent = 'Audit trails and error reporting';
-                break;
-            case 'settings':
-                pageTitle.textContent = 'Settings';
-                pageSubtitle.textContent = 'Platform configuration and preferences';
-                break;
-        }
-    }
-
-    // Add click listeners to sidebar links
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const target = link.dataset.target;
-            if (target) {
-                switchView(target);
-            }
-        });
-    });
-
-    // Handle "View All" button
-    if (viewAllBtn) {
-        viewAllBtn.addEventListener('click', () => {
-            switchView('agents');
+            API.auth.logout();
+            window.location.href = 'login.html';
         });
     }
 }
 
-function initPortfolioChart() {
-    const ctx = document.getElementById('portfolioChart');
-    if (!ctx) return;
+// ==================== Charts ====================
 
-    // Fake data for the portfolio chart simulation
-    const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 100);
-    gradient.addColorStop(0, 'rgba(59, 130, 246, 0.2)'); // Blue with opacity
-    gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
-
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            datasets: [{
-                label: 'Portfolio Value',
-                data: [120000, 121500, 121000, 122800, 123500, 124000, 124580],
-                borderColor: '#3b82f6',
-                backgroundColor: gradient,
-                borderWidth: 2,
-                pointRadius: 0,
-                pointHoverRadius: 4,
-                fill: true,
-                tension: 0.4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                    backgroundColor: '#1e293b',
-                    titleColor: '#f8fafc',
-                    bodyColor: '#94a3b8',
-                    borderColor: 'rgba(255,255,255,0.1)',
-                    borderWidth: 1,
-                    displayColors: false,
-                    callbacks: {
-                        label: function (context) {
-                            let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            if (context.parsed.y !== null) {
-                                label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
-                            }
-                            return label;
-                        }
-                    }
-                }
+function initializeCharts() {
+    // Portfolio mini chart (Overview page)
+    const portfolioChartCanvas = document.getElementById('portfolioChart');
+    if (portfolioChartCanvas) {
+        new Chart(portfolioChartCanvas, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    data: [120000, 121500, 119800, 122000, 123200, 122800, 124580],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
             },
-            scales: {
-                x: {
-                    display: false // Hide X axis for cleaner look in the card
-                },
-                y: {
-                    display: false // Hide Y axis
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
                 }
-            },
-            interaction: {
-                mode: 'nearest',
-                axis: 'x',
-                intersect: false
             }
-        }
-    });
-}
+        });
+    }
 
-// --- PORTFOLIO VIEW LOGIC ---
-function initPortfolioView() {
-    // 1. Mock Data for Holdings
-    const holdings = [
-        { asset: 'Bitcoin (BTC)', type: 'Crypto', quantity: 0.45, avgPrice: 40000, currentPrice: 42500 },
-        { asset: 'Ethereum (ETH)', type: 'Crypto', quantity: 4.2, avgPrice: 2100, currentPrice: 2350 },
-        { asset: 'Tesla (TSLA)', type: 'Stock', quantity: 25, avgPrice: 180, currentPrice: 210 },
-        { asset: 'Apple (AAPL)', type: 'Stock', quantity: 50, avgPrice: 150, currentPrice: 185 },
-        { asset: 'EUR/USD', type: 'Forex', quantity: 10000, avgPrice: 1.08, currentPrice: 1.09 },
-        { asset: 'Gold (XAU)', type: 'Commodity', quantity: 5, avgPrice: 1950, currentPrice: 2020 }
-    ];
-
-    // 2. Render Allocation Chart (Donut)
-    const allocCtx = document.getElementById('allocationChart');
-    if (allocCtx) {
-        new Chart(allocCtx, {
+    // Exposure chart (Risk page)
+    const exposureChartCanvas = document.getElementById('exposureChart');
+    if (exposureChartCanvas) {
+        new Chart(exposureChartCanvas, {
             type: 'doughnut',
             data: {
-                labels: ['Crypto', 'Stocks', 'Forex', 'Commodities'],
+                labels: ['Crypto', 'Forex', 'Stocks', 'Options', 'Cash'],
                 datasets: [{
-                    data: [35, 40, 15, 10],
-                    backgroundColor: [
-                        '#f59e0b', // Amber (Crypto)
-                        '#3b82f6', // Blue (Stocks)
-                        '#10b981', // Green (Forex)
-                        '#eab308'  // Yellow (Gold)
-                    ],
-                    borderWidth: 0,
-                    hoverOffset: 4
+                    data: [35, 25, 20, 15, 5],
+                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#6b7280']
                 }]
             },
             options: {
@@ -246,150 +160,73 @@ function initPortfolioView() {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position: 'right',
-                        labels: { color: '#94a3b8', boxWidth: 12, font: { size: 11 } }
+                        position: 'bottom',
+                        labels: { color: '#94a3b8', padding: 15 }
                     }
-                },
-                cutout: '70%'
-            }
-        });
-    }
-
-    // 3. Render Performance Chart (Line)
-    const perfCtx = document.getElementById('portfolioPerformanceChart');
-    if (perfCtx) {
-        const gradient = perfCtx.getContext('2d').createLinearGradient(0, 0, 0, 300);
-        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.2)');
-        gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
-
-        new Chart(perfCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Net Worth',
-                    data: [98000, 105000, 102000, 115000, 118000, 124580],
-                    borderColor: '#10b981', // Green
-                    backgroundColor: gradient,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 3,
-                    pointBackgroundColor: '#0f172a',
-                    pointBorderColor: '#10b981',
-                    pointBorderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false,
-                        backgroundColor: '#1e293b',
-                        titleColor: '#f8fafc',
-                        callbacks: {
-                            label: function (context) {
-                                return 'Value: ' + new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        ticks: { color: '#94a3b8' }
-                    },
-                    y: {
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        ticks: { color: '#94a3b8', callback: (val) => '$' + val / 1000 + 'k' }
-                    }
-                },
-                interaction: {
-                    mode: 'nearest',
-                    axis: 'x',
-                    intersect: false
                 }
             }
         });
     }
 
-    // 4. Render Holdings Table
-    const tableBody = document.getElementById('holdingsTableBody');
-    if (tableBody) {
-        tableBody.innerHTML = ''; // Clear existing
-        holdings.forEach(item => {
-            const totalValue = item.quantity * item.currentPrice;
-            const investValue = item.quantity * item.avgPrice;
-            const profitLoss = totalValue - investValue;
-            const profitPercent = (profitLoss / investValue) * 100;
-            const isProfit = profitLoss >= 0;
-
-            const row = `
-                <tr>
-                    <td style="font-weight: 500; color: white;">${item.asset}</td>
-                    <td><span class="status-badge" style="background: rgba(255,255,255,0.1); color: #cbd5e1;">${item.type}</span></td>
-                    <td>${item.quantity.toLocaleString(undefined, { maximumFractionDigits: 4 })}</td>
-                    <td>$${item.avgPrice.toLocaleString()}</td>
-                    <td>$${item.currentPrice.toLocaleString()}</td>
-                    <td style="font-weight: 600;">$${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    <td style="color: ${isProfit ? 'var(--accent-green)' : 'var(--accent-red)'}">
-                        ${isProfit ? '+' : ''}$${Math.abs(profitLoss).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${isProfit ? '+' : ''}${profitPercent.toFixed(2)}%)
-                    </td>
-                </tr>
-            `;
-            tableBody.insertAdjacentHTML('beforeend', row);
-        });
-    }
-}
-
-// --- RISK VIEW LOGIC ---
-function initRiskView() {
-    // 1. Exposure Chart (Bar)
-    const exposureCtx = document.getElementById('exposureChart');
-    if (exposureCtx) {
-        new Chart(exposureCtx, {
-            type: 'bar',
+    // Portfolio performance chart
+    const perfChartCanvas = document.getElementById('portfolioPerformanceChart');
+    if (perfChartCanvas) {
+        new Chart(perfChartCanvas, {
+            type: 'line',
             data: {
-                labels: ['Crypto', 'Stocks', 'Forex', 'Commodities', 'Cash'],
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
                 datasets: [{
-                    label: 'Exposure %',
-                    data: [35, 40, 15, 8, 2],
-                    backgroundColor: [
-                        'rgba(245, 158, 11, 0.7)',
-                        'rgba(59, 130, 246, 0.7)',
-                        'rgba(16, 185, 129, 0.7)',
-                        'rgba(234, 179, 8, 0.7)',
-                        'rgba(148, 163, 184, 0.7)'
-                    ],
-                    borderWidth: 0,
-                    borderRadius: 6
+                    label: 'Portfolio Value',
+                    data: [100000, 105000, 102000, 112000, 118000, 115000, 124580],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.3
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                indexAxis: 'y',
                 plugins: {
                     legend: { display: false }
                 },
                 scales: {
-                    x: {
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        ticks: { color: '#94a3b8', callback: val => val + '%' },
-                        max: 50
-                    },
-                    y: {
-                        grid: { display: false },
-                        ticks: { color: '#f8fafc', font: { size: 12 } }
-                    }
+                    x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
+                    y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
                 }
             }
         });
     }
 
-    // 2. Risk Slider Handlers
+    // Allocation chart
+    const allocChartCanvas = document.getElementById('allocationChart');
+    if (allocChartCanvas) {
+        new Chart(allocChartCanvas, {
+            type: 'pie',
+            data: {
+                labels: ['Crypto', 'Stocks', 'Forex', 'Commodities', 'Cash'],
+                datasets: [{
+                    data: [45, 30, 15, 5, 5],
+                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#6b7280']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#94a3b8', padding: 10 }
+                    }
+                }
+            }
+        });
+    }
+}
+
+// ==================== Sliders (Risk Management) ====================
+
+function setupSliders() {
     const sliders = [
         { id: 'maxPositionSize', valueId: 'maxPositionValue', suffix: '%' },
         { id: 'stopLossDefault', valueId: 'stopLossValue', suffix: '%' },
@@ -397,82 +234,93 @@ function initRiskView() {
         { id: 'leverageLimit', valueId: 'leverageValue', suffix: 'x' }
     ];
 
-    sliders.forEach(({ id, valueId, suffix }) => {
-        const slider = document.getElementById(id);
-        const valueDisplay = document.getElementById(valueId);
-        if (slider && valueDisplay) {
-            slider.addEventListener('input', () => {
-                valueDisplay.textContent = slider.value + suffix;
+    sliders.forEach(slider => {
+        const sliderEl = document.getElementById(slider.id);
+        const valueEl = document.getElementById(slider.valueId);
+        if (sliderEl && valueEl) {
+            sliderEl.addEventListener('input', function () {
+                valueEl.textContent = this.value + slider.suffix;
             });
         }
     });
 
-    // 3. Save Risk Settings Button
+    // Save risk settings button
     const saveRiskBtn = document.getElementById('saveRiskSettings');
     if (saveRiskBtn) {
-        saveRiskBtn.addEventListener('click', () => {
-            showToast('Risk settings saved successfully!', 'success');
+        saveRiskBtn.addEventListener('click', async function () {
+            try {
+                const settings = {
+                    max_position_size: parseInt(document.getElementById('maxPositionSize').value),
+                    stop_loss_default: parseInt(document.getElementById('stopLossDefault').value),
+                    daily_loss_limit: parseInt(document.getElementById('dailyLossLimit').value),
+                    leverage_limit: parseInt(document.getElementById('leverageLimit').value)
+                };
+                await API.auth.updateRiskSettings(settings);
+                showToast('Risk settings saved!', 'success');
+            } catch (error) {
+                showToast('Failed to save settings: ' + error.message, 'error');
+            }
+        });
+    }
+
+    // Save profile button
+    const saveProfileBtn = document.getElementById('saveProfile');
+    if (saveProfileBtn) {
+        saveProfileBtn.addEventListener('click', async function () {
+            try {
+                const updates = {
+                    full_name: document.getElementById('profileName').value
+                };
+                await API.auth.updateProfile(updates);
+                // Update local storage
+                const user = JSON.parse(localStorage.getItem('wekeza_current_user'));
+                user.full_name = updates.full_name;
+                localStorage.setItem('wekeza_current_user', JSON.stringify(user));
+                document.getElementById('userName').textContent = updates.full_name;
+                showToast('Profile saved!', 'success');
+            } catch (error) {
+                showToast('Failed to save profile: ' + error.message, 'error');
+            }
         });
     }
 }
 
-// --- SETTINGS VIEW LOGIC ---
-function initSettingsView() {
-    // 1. Save Profile Button
-    const saveProfileBtn = document.getElementById('saveProfile');
-    if (saveProfileBtn) {
-        saveProfileBtn.addEventListener('click', () => {
-            const nameInput = document.getElementById('profileName');
-            if (nameInput && nameInput.value.trim()) {
-                // Update localStorage user
-                const currentUser = Auth.getCurrentUser();
-                if (currentUser) {
-                    currentUser.fullName = nameInput.value.trim();
-                    localStorage.setItem('wekeza_current_user', JSON.stringify(currentUser));
+// ==================== Toast Notifications ====================
 
-                    // Update header display
-                    const headerName = document.getElementById('userName');
-                    if (headerName) headerName.textContent = currentUser.fullName;
+function showToast(message, type = 'info') {
+    const existingToast = document.querySelector('.toast');
+    if (existingToast) existingToast.remove();
 
-                    showToast('Profile updated successfully!', 'success');
-                }
-            }
-        });
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        font-size: 14px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    `;
+
+    if (type === 'success') {
+        toast.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+    } else if (type === 'error') {
+        toast.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+    } else {
+        toast.style.background = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
     }
 
-    // 2. Notification Toggle Handlers (just visual feedback for now)
-    const toggles = document.querySelectorAll('.toggle-switch input');
-    toggles.forEach(toggle => {
-        toggle.addEventListener('change', () => {
-            // In a real app, this would save to backend
-            const label = toggle.closest('.toggle-item')?.querySelector('.toggle-title')?.textContent;
-            const state = toggle.checked ? 'enabled' : 'disabled';
-            showToast(`${label} notifications ${state}`, 'info');
-        });
-    });
+    document.body.appendChild(toast);
 
-    // 3. Export Data Button
-    const exportBtn = document.querySelector('.btn-danger-secondary');
-    if (exportBtn) {
-        exportBtn.addEventListener('click', () => {
-            showToast('Preparing data export...', 'info');
-            setTimeout(() => {
-                showToast('Export complete! Check your downloads.', 'success');
-            }, 1500);
-        });
-    }
-
-    // 4. Delete Account Button (with confirmation)
-    const deleteBtn = document.querySelector('.btn-danger');
-    if (deleteBtn) {
-        deleteBtn.addEventListener('click', () => {
-            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                Auth.logout();
-                showToast('Account deletion requested. Redirecting...', 'info');
-                setTimeout(() => {
-                    window.location.href = 'landingpage.html';
-                }, 2000);
-            }
-        });
-    }
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
