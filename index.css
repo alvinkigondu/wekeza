@@ -1,0 +1,361 @@
+/* Wekeza - Custom Styles */
+
+/* ===== Base Styles ===== */
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== Custom Scrollbar ===== */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ===== Animations ===== */
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(2000%);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(16, 185, 129, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes border-glow {
+  0%, 100% {
+    border-color: rgba(99, 102, 241, 0.3);
+  }
+  50% {
+    border-color: rgba(99, 102, 241, 0.8);
+  }
+}
+
+/* ===== Animation Classes ===== */
+.animate-scan {
+  animation: scan 4s linear infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.animate-border-glow {
+  animation: border-glow 2s ease-in-out infinite;
+}
+
+/* ===== Glassmorphism ===== */
+.glass {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-dark {
+  background: rgba(2, 6, 23, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ===== Gradient Effects ===== */
+.gradient-primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.gradient-secondary {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+}
+
+.gradient-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.gradient-accent {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.gradient-mesh {
+  background: 
+    radial-gradient(at 40% 20%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(245, 158, 11, 0.1) 0px, transparent 50%),
+    radial-gradient(at 80% 50%, rgba(239, 68, 68, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.1) 0px, transparent 50%);
+}
+
+/* ===== Footprint Heatmap Colors ===== */
+.heatmap-buy-1 { background-color: rgba(16, 185, 129, 0.2); }
+.heatmap-buy-2 { background-color: rgba(16, 185, 129, 0.4); }
+.heatmap-buy-3 { background-color: rgba(16, 185, 129, 0.6); }
+.heatmap-buy-4 { background-color: rgba(16, 185, 129, 0.8); }
+.heatmap-buy-5 { background-color: rgba(16, 185, 129, 1.0); }
+
+.heatmap-sell-1 { background-color: rgba(239, 68, 68, 0.2); }
+.heatmap-sell-2 { background-color: rgba(239, 68, 68, 0.4); }
+.heatmap-sell-3 { background-color: rgba(239, 68, 68, 0.6); }
+.heatmap-sell-4 { background-color: rgba(239, 68, 68, 0.8); }
+.heatmap-sell-5 { background-color: rgba(239, 68, 68, 1.0); }
+
+/* ===== Signal Indicators ===== */
+.signal-bullish {
+  color: #10b981;
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.signal-bearish {
+  color: #ef4444;
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+.signal-neutral {
+  color: #64748b;
+}
+
+/* ===== Risk Gauge ===== */
+.gauge-container {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  overflow: hidden;
+}
+
+.gauge-background {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 180deg,
+    #10b981 0deg,
+    #f59e0b 90deg,
+    #ef4444 180deg,
+    transparent 180deg
+  );
+  opacity: 0.3;
+}
+
+.gauge-fill {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 180deg,
+    #10b981 0deg,
+    #f59e0b 90deg,
+    #ef4444 180deg,
+    transparent 180deg
+  );
+  clip-path: polygon(50% 50%, 100% 100%, 0% 100%);
+}
+
+.gauge-needle {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  height: 80px;
+  background: linear-gradient(to top, #f8fafc, transparent);
+  transform-origin: bottom center;
+  transition: transform 0.5s ease-out;
+  border-radius: 2px;
+}
+
+/* ===== Grid Pattern ===== */
+.grid-pattern {
+  background-image: 
+    linear-gradient(rgba(100, 116, 139, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100, 116, 139, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* ===== Status Indicators ===== */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-online {
+  background-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.status-warning {
+  background-color: #f59e0b;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+.status-offline {
+  background-color: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+/* ===== Card Effects ===== */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== Typography ===== */
+.text-gradient {
+  background: linear-gradient(135deg, #10b981, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mono-numbers {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== Loading States ===== */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(30, 41, 59, 1) 0%,
+    rgba(51, 65, 85, 1) 50%,
+    rgba(30, 41, 59, 1) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+/* ===== Tooltip ===== */
+.tooltip {
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background: #1e293b;
+  color: #f8fafc;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+}
+
+/* ===== Trading Table ===== */
+.trade-row-buy {
+  border-left: 3px solid #10b981;
+}
+
+.trade-row-sell {
+  border-left: 3px solid #ef4444;
+}
+
+/* ===== Agent Network Lines ===== */
+.network-line {
+  stroke: rgba(99, 102, 241, 0.3);
+  stroke-width: 1;
+  fill: none;
+}
+
+.network-line-active {
+  stroke: rgba(16, 185, 129, 0.6);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.4));
+}
